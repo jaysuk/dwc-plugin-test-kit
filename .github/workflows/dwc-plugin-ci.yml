@@ -77,8 +77,11 @@ jobs:
         working-directory: plugin
         run: |
           npm install
-          DEPS=$(node -p "Object.keys(require('./package.json').dependencies||{}).join(' ')")
-          if [ -n "$DEPS" ]; then (cd ../DuetWebControl && npm install --no-save $DEPS); fi
+          # Install the plugin's runtime deps into DWC so vue-tsc can resolve them. Use each dep's
+          # package.json spec: the value for github:/url/path deps (a bare github-only name would 404
+          # on the npm registry), else name@version for registry deps.
+          SPECS=$(node -p "Object.entries(require('./package.json').dependencies||{}).map(([k,v])=>v.includes(':')||v.includes('/')?v:k+'@'+v).join(' ')")
+          if [ -n "$SPECS" ]; then (cd ../DuetWebControl && npm install --no-save $SPECS); fi
       - name: Verify build (installable ZIP, correctly externalised)
         working-directory: plugin
         env:
