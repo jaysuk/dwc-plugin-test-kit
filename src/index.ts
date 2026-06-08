@@ -3,7 +3,16 @@
  * See README.md for setup. Public surface:
  */
 export { dwcAliases } from "./aliases";
-export { makeObjectModel } from "./fixtures";
+export { makeObjectModel, loadObjectModel, type LoadObjectModelOptions } from "./fixtures";
+export {
+	byTitle,
+	byText,
+	clickByTitle,
+	clickByText,
+	expectCode,
+	expectLastCode,
+	expectNoCodes,
+} from "./query";
 export type { DwcState, DwcFile, DwcNotification } from "./state";
 export {
 	mountInDwc,

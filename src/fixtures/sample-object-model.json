@@ -1,0 +1,142 @@
+{
+  "_comment": "Curated, realistic standalone (non-SBC) Duet 3 Mini 5+ object model for mount tests. Not a capture from a specific machine; loadObjectModel() also accepts a real M409 K\"\" dump. `global` is plain JSON here and is converted to a Map by loadObjectModel to match @duet3d/objectmodel's ModelDictionary.",
+  "boards": [
+    {
+      "canAddress": 0,
+      "firmwareName": "RepRapFirmware for Duet 3 Mini 5+",
+      "firmwareVersion": "3.7.0-alpha.5",
+      "name": "Duet 3 Mini 5+",
+      "shortName": "Mini5plus",
+      "mcuTemp": { "current": 34.2, "min": 30.1, "max": 41.7 },
+      "vIn": { "current": 24.1, "min": 23.9, "max": 24.4 },
+      "v12": { "current": 12.1, "min": 12.0, "max": 12.2 },
+      "uniqueId": "MOCK-0000-0000-0000-0000-0000-0000",
+      "state": "running"
+    }
+  ],
+  "directories": {
+    "filaments": "0:/filaments/",
+    "gCodes": "0:/gcodes/",
+    "macros": "0:/macros/",
+    "menu": "0:/menu/",
+    "scans": "0:/scans/",
+    "system": "0:/sys/",
+    "web": "0:/www/"
+  },
+  "fans": [
+    { "name": "", "requestedValue": 0, "actualValue": 0, "rpm": -1, "thermostatic": { "heaters": [], "highTemperature": null } },
+    { "name": "heatsink", "requestedValue": 1, "actualValue": 1, "rpm": 5400, "thermostatic": { "heaters": [1], "highTemperature": 45 } }
+  ],
+  "global": {
+    "bedProbed": true,
+    "filamentLoaded": "PLA",
+    "purgeLength": 8
+  },
+  "heat": {
+    "coldExtrudeTemperature": 160,
+    "coldRetractTemperature": 90,
+    "bedHeaters": [0],
+    "chamberHeaters": [-1],
+    "heaters": [
+      { "active": 60, "standby": 55, "current": 59.8, "state": "active", "max": 120, "min": -10, "sensor": 0 },
+      { "active": 210, "standby": 160, "current": 208.4, "state": "active", "max": 300, "min": -10, "sensor": 1 }
+    ]
+  },
+  "inputs": [
+    { "name": "HTTP", "state": "idle", "active": true, "axesRelative": false, "compatibility": "RepRapFirmware", "feedRate": 50, "lineNumber": 0 },
+    { "name": "Telnet", "state": "idle", "active": false },
+    { "name": "File", "state": "idle", "active": false }
+  ],
+  "job": {
+    "build": null,
+    "duration": null,
+    "file": { "fileName": null, "size": 0, "filament": [], "numLayers": 0, "height": 0, "layerHeight": 0 },
+    "filePosition": 0,
+    "lastFileName": "0:/gcodes/benchy.gcode",
+    "layer": null,
+    "layerTime": 0,
+    "timesLeft": { "file": null, "filament": null, "slicer": null }
+  },
+  "limits": {
+    "axes": 15,
+    "boards": 5,
+    "extruders": 8,
+    "fans": 12,
+    "heaters": 10,
+    "sensors": 32,
+    "spindles": 4,
+    "tools": 50,
+    "trackedObjects": 40
+  },
+  "move": {
+    "axes": [
+      { "letter": "X", "homed": true, "machinePosition": 150.0, "userPosition": 150.0, "min": 0, "max": 180, "visible": true, "babystep": 0, "workplaceOffsets": [0, 0, 0, 0, 0, 0, 0, 0, 0] },
+      { "letter": "Y", "homed": true, "machinePosition": 90.0, "userPosition": 90.0, "min": 0, "max": 180, "visible": true, "babystep": 0, "workplaceOffsets": [0, 0, 0, 0, 0, 0, 0, 0, 0] },
+      { "letter": "Z", "homed": true, "machinePosition": 12.5, "userPosition": 12.5, "min": 0, "max": 180, "visible": true, "babystep": 0.04, "workplaceOffsets": [0, 0, 0, 0, 0, 0, 0, 0, 0] }
+    ],
+    "extruders": [
+      { "factor": 1.0, "position": 0, "filament": "PLA", "filamentDiameter": 1.75, "rawPosition": 0 }
+    ],
+    "compensation": { "type": "mesh", "probeGrid": { "axes": ["X", "Y"], "maxs": [170, 170], "mins": [10, 10], "spacings": [40, 40] } },
+    "currentMove": { "acceleration": 0, "deceleration": 0, "requestedSpeed": 0, "topSpeed": 0 },
+    "kinematics": { "name": "coreXY" },
+    "speedFactor": 1.0,
+    "workplaceNumber": 0
+  },
+  "network": {
+    "hostname": "duet3mini",
+    "name": "mock-duet",
+    "interfaces": [
+      { "type": "wifi", "actualIP": "192.168.1.50", "state": "active", "ssid": "Workshop", "signal": -54, "mac": "AA:BB:CC:DD:EE:FF" }
+    ]
+  },
+  "sensors": {
+    "analog": [
+      { "name": "MCU", "lastReading": 34.2, "type": "mcuTemp" },
+      { "name": "Heated bed", "lastReading": 59.8, "type": "thermistor" },
+      { "name": "Nozzle", "lastReading": 208.4, "type": "thermistor" }
+    ],
+    "endstops": [
+      { "triggered": true, "type": "inputPin" },
+      { "triggered": true, "type": "inputPin" },
+      { "triggered": false, "type": "zProbeAsEndstop" }
+    ],
+    "filamentMonitors": [
+      { "enabled": true, "status": "ok", "type": "simple", "filamentPresent": true }
+    ],
+    "probes": [
+      { "type": 8, "value": [0], "triggerHeight": 0.7, "threshold": 500, "calibrationTemperature": 0 }
+    ]
+  },
+  "spindles": [],
+  "state": {
+    "atxPower": null,
+    "currentTool": 0,
+    "displayMessage": "",
+    "gpOut": [],
+    "machineMode": "FFF",
+    "messageBox": null,
+    "msUpTime": 123,
+    "status": "idle",
+    "time": "2026-06-08T15:00:00",
+    "upTime": 8460
+  },
+  "tools": [
+    {
+      "number": 0,
+      "name": "",
+      "active": [210],
+      "standby": [160],
+      "heaters": [1],
+      "extruders": [0],
+      "fans": [0],
+      "offsets": [0, 0, 0],
+      "spindle": -1,
+      "state": "active",
+      "filamentExtruder": 0
+    }
+  ],
+  "volumes": [
+    { "name": "SD card", "mounted": true, "capacity": 7948206080, "freeSpace": 7800000000, "speed": 20000000 }
+  ]
+}

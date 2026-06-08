@@ -43,9 +43,14 @@ jobs:
       - name: Install plugin
         working-directory: plugin
         run: npm install
-      - name: Run tests
+      - name: Run tests (with coverage if the plugin defines test:coverage)
         working-directory: plugin
-        run: npm test
+        run: |
+          if [ "$(node -p "!!(require('./package.json').scripts||{})['test:coverage']")" = "true" ]; then
+            npm run test:coverage
+          else
+            npm test
+          fi
 
   build-and-typecheck:
     name: Build + type-check against DWC

@@ -1,3 +1,5 @@
+import sampleObjectModel from "./fixtures/sample-object-model.json";
+
 /**
  * A realistic-enough object-model fixture for mounting read-out widgets. Pass overrides to tailor it
  * for a specific test. `global` is a real Map (matching @duet3d/objectmodel's ModelDictionary) and
@@ -56,4 +58,49 @@ export function makeObjectModel(overrides: Record<string, unknown> = {}): Record
 		network: { interfaces: [{ actualIP: "192.168.1.50", state: "active" }] },
 		...overrides,
 	};
+}
+
+export interface LoadObjectModelOptions {
+	/** Convert a plain-object `global` into a real Map (matching ModelDictionary). Default: true. */
+	mapGlobals?: boolean;
+	/** Shallow-merged over the loaded model (after `global` conversion). */
+	overrides?: Record<string, unknown>;
+}
+
+/**
+ * Load a realistic object model for a mount test.
+ *
+ * With no argument it returns a curated, fuller standalone Duet 3 model (more keys than
+ * `makeObjectModel` — directories, inputs, limits, volumes, mesh compensation, …), useful for
+ * catching field-shape assumptions the thin fixture hides.
+ *
+ * Pass your own `dump` to test against true-to-life data: either a raw object model (plain JSON, e.g.
+ * a captured DWC `machineStore.model`) or a full RRF `M409 K"" ` response of the form `{ result: {…} }`
+ * — the `result` is unwrapped automatically. A plain-object `global` is converted to a Map by default
+ * (set `mapGlobals: false` to keep it as-is).
+ *
+ * The result is a fresh deep clone, so mutating it in one test never leaks into another. Feed it to
+ * `setModel(...)`.
+ */
+export function loadObjectModel(
+	dump?: Record<string, unknown>,
+	options: LoadObjectModelOptions = {},
+): Record<string, unknown> {
+	const { mapGlobals = true, overrides } = options;
+	const source = dump ?? (sampleObjectModel as Record<string, unknown>);
+	// Unwrap an M409 response ({ result: … }) but not a bare model that merely happens to have no state.
+	const raw = (source && typeof source === "object" && "result" in source && !("state" in source)
+		? (source as { result: Record<string, unknown> }).result
+		: source) as Record<string, unknown>;
+
+	const model = structuredClone(raw);
+	delete (model as Record<string, unknown>)._comment;
+
+	if (mapGlobals) {
+		const g = model.global;
+		if (g && !(g instanceof Map) && typeof g === "object" && !Array.isArray(g)) {
+			model.global = new Map(Object.entries(g as Record<string, unknown>));
+		}
+	}
+	return overrides ? { ...model, ...overrides } : model;
 }

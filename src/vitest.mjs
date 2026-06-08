@@ -30,6 +30,18 @@ export function dwcVitestConfig(overrides = {}) {
 			setupFiles: ["dwc-plugin-test-kit/setup"],
 			server: { deps: { inline: [/dwc-plugin-test-kit/, /vuetify/] } },
 			...(testOverrides ?? {}),
+			// Coverage is opt-in (only collected when you pass `--coverage`, e.g. via a `test:coverage`
+			// script) and needs `@vitest/coverage-v8` installed in the consumer. These defaults scope it
+			// to the plugin's own source and skip generated/typing files, so the report tells you exactly
+			// which plugin lines/branches still need a test. Set last (after testOverrides) so a consumer
+			// `test.coverage` deep-merges rather than being clobbered.
+			coverage: {
+				provider: "v8",
+				reporter: ["text", "text-summary", "html"],
+				include: ["src/**"],
+				exclude: ["**/*.d.ts", "**/model-data.js", "**/*.config.*", "test/**", "e2e/**"],
+				...((testOverrides ?? {}).coverage ?? {}),
+			},
 		},
 		...rest,
 	};

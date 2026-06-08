@@ -102,7 +102,11 @@ import {
   sentCodes,         // string[] of every G-code sent, in order
   lastCode,          // the most recent sent G-code
   notifications,     // uiStore notifications raised
-  makeObjectModel,   // build/override a realistic OM fixture
+  makeObjectModel,   // build/override a small programmatic OM fixture
+  loadObjectModel,   // load a fuller realistic model — or your own M409 dump (see below)
+  byTitle, byText,   // find a button by title= / text (3rd arg overrides the "button" selector)
+  clickByTitle, clickByText,  // find + click; throw a helpful error if nothing matches
+  expectCode, expectLastCode, expectNoCodes,  // Vitest assertions over sentCodes()
   dwc, resetDwc,     // the raw reactive state + manual reset (auto-reset runs before each test)
 } from "dwc-plugin-test-kit";
 ```
@@ -110,6 +114,21 @@ import {
 The fake `machineStore.sendCode` records into `sentCodes()`; `getFileList` reads `setFiles()`; the
 object model defaults to `makeObjectModel()` (axes, heaters, fans, spindles, tools, a `global` Map,
 `ledStrips`, …). State resets before every test.
+
+### Realistic data: `loadObjectModel`
+
+`makeObjectModel()` is a small programmatic fixture. For true-to-life data use `loadObjectModel()`:
+
+```ts
+setModel(loadObjectModel());                 // bundled fuller standalone Duet 3 model
+setModel(loadObjectModel(myDump));           // your captured machineStore.model
+setModel(loadObjectModel(m409Response));     // an RRF `M409 K"" ` response ({ result }) — auto-unwrapped
+```
+
+It deep-clones (no cross-test leakage) and converts a plain-object `global` to a `Map` (matching
+`@duet3d/objectmodel`'s `ModelDictionary`); pass `{ mapGlobals: false }` to keep it, `{ overrides }` to
+patch. Capturing a real model from your own machine and dropping it in is the cheapest way to catch
+field-shape assumptions the thin fixture hides.
 
 ## CLI (build + type gates)
 
@@ -137,7 +156,24 @@ jobs:
 ```
 
 It runs the unit/mount tests, then (in a second job) checks out DWC and runs `verify-build` +
-`typecheck`.
+`typecheck`. If your plugin defines a `test:coverage` script (see below) the unit job runs it instead
+of `npm test`, so coverage is collected in CI automatically.
+
+## Coverage — see what's left to test
+
+`dwcVitestConfig` ships coverage defaults scoped to your plugin's `src/**` (skipping `*.d.ts`,
+generated `model-data.js`, configs and tests), so you only need to opt in:
+
+```jsonc
+// package.json
+"devDependencies": { "@vitest/coverage-v8": "^4.1.8", /* … */ },
+"scripts": { "test:coverage": "vitest run --coverage", /* … */ }
+```
+
+`npm run test:coverage` prints a per-file table of uncovered lines/branches and writes an HTML report
+to `coverage/`. That table *is* your "what do I still need to test?" list. Tune via `test.coverage` in
+`vitest.config.ts` (deep-merged over the defaults), e.g. add `thresholds: { lines: 80 }` to fail CI
+below a bar.
 
 ## Vendoring instead of installing
 
@@ -148,8 +184,11 @@ Everything is dependency-light and self-contained.
 ## What it does NOT cover
 happy-dom mounting catches **setup/TDZ errors and most render errors**, but a few Vuetify behaviours
 only reproduce in a real browser (teleported overlays, layout measurement). For those — and for true
-integration (route registration, the custom shell, visual regression) — see the optional Playwright
-**E2E scaffold** in `e2e/` of a consuming plugin (a headless DWC + a mock-connector backend).
+integration (route registration, the custom shell, visual regression) — see the Playwright **E2E
+template** in [`e2e-template/`](e2e-template/). Its mock-Duet connector is a tested kit module
+(`dwc-plugin-test-kit/mock-duet`, exercised by `test/mock-duet.test.ts` — boot a server, drive the
+`rr_*` endpoints, assert recorded G-code), so that half runs in CI; the browser/screenshot half needs
+a built DWC serving your plugin and stays opt-in scaffolding you copy to `e2e/` and adapt.
 
 ## License
 MIT

@@ -1,18 +1,22 @@
 # E2E template (Playwright + mock Duet)
 
-> **Status: starting point, not turn-key.** The unit/mount layer (`dwc-plugin-test-kit`) catches
-> setup/TDZ and most render bugs cheaply and is fully automated. This E2E layer covers what only a
-> real browser can — teleported overlays, the custom shell, route registration, light/dark visual
-> regression — but it needs a built DWC serving your plugin and will need iteration against the DWC
-> version you target. Copy this folder into your plugin as `e2e/` and adapt.
+> **Status: the mock-Duet core is verified; the browser layer is scaffolding.** The unit/mount layer
+> (`dwc-plugin-test-kit`) catches setup/TDZ and most render bugs cheaply and is fully automated. This
+> E2E layer covers what only a real browser can — teleported overlays, the custom shell, route
+> registration, light/dark visual regression. The **mock Duet server is now a tested kit module**
+> (`dwc-plugin-test-kit/mock-duet`, see the kit's `test/mock-duet.test.ts`), so the connector +
+> G-code-recording half runs in CI. The **Playwright half still needs a built DWC serving your
+> plugin** and a browser, so it can't be hermetic — copy this folder into your plugin as `e2e/`,
+> adapt the spec, and turn it on once stable for your setup.
 
 ## The pieces
 
-- **`mock-duet/server.mjs`** — a tiny HTTP server implementing the Duet REST connector endpoints
-  (`rr_connect`, `rr_model`, `rr_gcode`, `rr_reply`, `rr_filelist`, …). It serves a canned object
-  model and **records every G-code** DWC sends, so you can assert on it. (RRF's model polling uses
-  sequence numbers; this skeleton returns the whole model each poll — adjust if your DWC build expects
-  finer-grained `seqs` diffing.)
+- **`mock-duet/server.mjs`** — a thin CLI wrapper around `createMockDuet()` from
+  `dwc-plugin-test-kit/mock-duet` (the implementation + its endpoint tests live in the kit). It
+  implements the Duet REST connector endpoints (`rr_connect`, `rr_model`, `rr_gcode`, `rr_reply`,
+  `rr_filelist`, …), serves a canned object model, and **records every G-code** DWC sends so you can
+  assert on it via `GET /__sent`. (RRF's model polling uses sequence numbers; this returns the whole
+  model each poll — adjust if your DWC build expects finer-grained `seqs` diffing.)
 - **`playwright.config.ts`** — points Playwright at `BASE_URL` (a running DWC) and starts the mock
   via `webServer`.
 - **`tests/smoke.spec.ts`** — loads DWC, activates the plugin, asserts no console errors, and
