@@ -21,6 +21,8 @@ export function dwcAliases() {
 		"@/stores/cache": stub("cache"),
 		"@/stores/menu": stub("menu"),
 		"@/plugins": stub("plugins"),
+		"@/composables/useComponentSettings": stub("useComponentSettings"),
+		"@/composables/useConfirmDialog": stub("useConfirmDialog"),
 		"@/i18n": stub("i18n"),
 		"@/utils/events": stub("events"),
 		"vue-router": stub("router"),
