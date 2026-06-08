@@ -1,0 +1,86 @@
+# Reusable CI workflow for DuetWebControl (Vue 3) plugins.
+#
+# In a plugin repo, add .github/workflows/ci.yml:
+#
+#   name: CI
+#   on: [push, pull_request]
+#   jobs:
+#     test:
+#       uses: jaysuk/dwc-plugin-test-kit/.github/workflows/dwc-plugin-ci.yml@main
+#
+name: DWC plugin CI
+
+on:
+  workflow_call:
+    inputs:
+      dwc-repo:
+        description: DuetWebControl repository to build/type-check against.
+        type: string
+        default: Duet3D/DuetWebControl
+      dwc-ref:
+        description: DuetWebControl branch/tag/sha.
+        type: string
+        default: next
+      kit-ref:
+        description: dwc-plugin-test-kit ref.
+        type: string
+        default: main
+
+jobs:
+  unit:
+    name: Unit + mount tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { path: plugin }
+      - uses: actions/checkout@v4
+        with:
+          repository: jaysuk/dwc-plugin-test-kit
+          ref: ${{ inputs.kit-ref }}
+          path: dwc-plugin-test-kit
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm, cache-dependency-path: plugin/package-lock.json }
+      - name: Install plugin
+        working-directory: plugin
+        run: npm install
+      - name: Run tests
+        working-directory: plugin
+        run: npm test
+
+  build-and-typecheck:
+    name: Build + type-check against DWC
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { path: plugin }
+      - uses: actions/checkout@v4
+        with:
+          repository: jaysuk/dwc-plugin-test-kit
+          ref: ${{ inputs.kit-ref }}
+          path: dwc-plugin-test-kit
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.dwc-repo }}
+          ref: ${{ inputs.dwc-ref }}
+          path: DuetWebControl
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Install DuetWebControl
+        working-directory: DuetWebControl
+        run: npm install
+      - name: Install plugin (and its bundled deps into DWC for type-checking)
+        working-directory: plugin
+        run: |
+          npm install
+          DEPS=$(node -p "Object.keys(require('./package.json').dependencies||{}).join(' ')")
+          if [ -n "$DEPS" ]; then (cd ../DuetWebControl && npm install --no-save $DEPS); fi
+      - name: Verify build (installable ZIP, correctly externalised)
+        working-directory: plugin
+        env:
+          DWC_DIR: ${{ github.workspace }}/DuetWebControl
+        run: npm run verify-build
+      - name: Type-check
+        working-directory: plugin
+        env:
+          DWC_DIR: ${{ github.workspace }}/DuetWebControl
+        run: npm run typecheck
