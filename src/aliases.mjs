@@ -23,6 +23,7 @@ export function dwcAliases() {
 		"@/plugins": stub("plugins"),
 		"@/composables/useComponentSettings": stub("useComponentSettings"),
 		"@/composables/useConfirmDialog": stub("useConfirmDialog"),
+		"@/composables/useInputDialog": stub("useInputDialog"),
 		"@/i18n": stub("i18n"),
 		"@/utils/events": stub("events"),
 		"vue-router": stub("router"),
