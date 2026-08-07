@@ -29,6 +29,7 @@ export function dwcAliases() {
 		"@/composables/useFirmwareInstallController": stub("useFirmwareInstallController"),
 		"@/components/dialogs/FirmwareUpdateDialog.vue": stubVue("FirmwareUpdateDialog"),
 		"@/components/dialogs/ConfigUpdatedDialog.vue": stubVue("ConfigUpdatedDialog"),
+		"DuetWebControl/components": stub("duetWebControlComponents"),
 		"@/i18n": stub("i18n"),
 		"@/utils/events": stub("events"),
 		"@/utils/path": stub("path"),
