@@ -41,6 +41,11 @@ export enum MachineStatus {
 	idle = "idle",
 }
 
+export enum NetworkInterfaceType {
+	ethernet = "ethernet",
+	wifi = "wifi",
+}
+
 export class ModelObject {}
 export function initObject<T>(_ctor: unknown, data: T): T { return data; }
 export function initCollection<T>(_ctor: unknown, data: Array<T>): Array<T> { return data; }

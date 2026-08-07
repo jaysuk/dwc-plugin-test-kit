@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 
 const stubsDir = join(dirname(fileURLToPath(import.meta.url)), "stubs");
 const stub = (name) => join(stubsDir, `${name}.ts`);
+const stubVue = (name) => join(stubsDir, `${name}.vue`);
 
 export function dwcAliases() {
 	return {
@@ -24,10 +25,16 @@ export function dwcAliases() {
 		"@/composables/useComponentSettings": stub("useComponentSettings"),
 		"@/composables/useConfirmDialog": stub("useConfirmDialog"),
 		"@/composables/useInputDialog": stub("useInputDialog"),
+		"@/composables/useFirmwareInstall": stub("useFirmwareInstall"),
+		"@/composables/useFirmwareInstallController": stub("useFirmwareInstallController"),
+		"@/components/dialogs/FirmwareUpdateDialog.vue": stubVue("FirmwareUpdateDialog"),
+		"@/components/dialogs/ConfigUpdatedDialog.vue": stubVue("ConfigUpdatedDialog"),
 		"@/i18n": stub("i18n"),
 		"@/utils/events": stub("events"),
+		"@/utils/path": stub("path"),
 		"vue-router": stub("router"),
 		"@duet3d/objectmodel": stub("objectmodel"),
+		"@duet3d/connectors": stub("connectors"),
 		"grid-layout-plus": stub("gridlayout"),
 	};
 }
