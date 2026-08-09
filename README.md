@@ -22,12 +22,13 @@ widget" test catches those automatically — including for widgets you add later
 
 ## Add it to a plugin
 
-**1. Install** (peer deps give you a single, deduped Vue/Vuetify copy):
+**1. Install** ([published on npm](https://www.npmjs.com/package/dwc-plugin-test-kit) - a plain
+install needs no git access; peer deps give you a single, deduped Vue/Vuetify copy):
 
 ```jsonc
 // package.json
 "devDependencies": {
-  "dwc-plugin-test-kit": "github:jaysuk/dwc-plugin-test-kit",  // or "file:../dwc-plugin-test-kit"
+  "dwc-plugin-test-kit": "^0.2.6",
   "@vitejs/plugin-vue": "^5.2.4",
   "@vue/test-utils": "^2.4.6",
   "happy-dom": "^15.11.7",
@@ -41,6 +42,9 @@ widget" test catches those automatically — including for widgets you add later
   "verify-build": "dwc-plugin-verify-build"
 }
 ```
+
+A `github:jaysuk/dwc-plugin-test-kit#vX.Y.Z` reference (or `file:../dwc-plugin-test-kit` for local
+development) still works if you'd rather pin to a specific commit/tag directly.
 
 **2. Vitest config** — `vitest.config.ts`:
 

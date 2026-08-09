@@ -4,6 +4,7 @@
   "type": "module",
   "description": "Reusable unit / component-mount test harness for DuetWebControl (Vue 3) plugins. Mocks the DWC plugin API surface (@/stores/*, @/plugins, @/i18n, @/utils/events) so plugin components can be mounted, fed a fake object model, and asserted on — plus CLI helpers to type-check and verify-build a plugin against a DWC checkout.",
   "license": "MIT",
+  "homepage": "https://github.com/jaysuk/dwc-plugin-test-kit",
   "exports": {
     ".": "./src/index.ts",
     "./vitest": {
@@ -22,8 +23,8 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "dwc-plugin-typecheck": "./bin/typecheck.mjs",
-    "dwc-plugin-verify-build": "./bin/verify-build.mjs"
+    "dwc-plugin-typecheck": "bin/typecheck.mjs",
+    "dwc-plugin-verify-build": "bin/verify-build.mjs"
   },
   "files": [
     "src",
