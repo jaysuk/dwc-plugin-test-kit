@@ -194,5 +194,13 @@ template** in [`e2e-template/`](e2e-template/). Its mock-Duet connector is a tes
 `rr_*` endpoints, assert recorded G-code), so that half runs in CI; the browser/screenshot half needs
 a built DWC serving your plugin and stays opt-in scaffolding you copy to `e2e/` and adapt.
 
+For anything that depends on RRF's *actual* behaviour rather than a canned model — real object-model
+semantics, real HTTP quirks, "did this G-code genuinely change machine state" — the same template has
+an emulated-firmware variant: `e2e-template/emulator/README.md`. It boots a real
+[Renode-emulated RepRapFirmware](https://github.com/meeloo/duet3-emulation) instead of the static
+mock, verified working end-to-end (real DWC, real browser, real firmware) on WSL2. Heavier prerequisite
+(a from-source firmware build, not `npm install`), so it's an even further opt-in tier than the
+mock-based template above — start there, reach for this only when the mock's fidelity runs out.
+
 ## License
 MIT
