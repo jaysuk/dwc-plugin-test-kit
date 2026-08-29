@@ -1,6 +1,6 @@
 {
   "name": "dwc-plugin-test-kit",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "type": "module",
   "description": "Reusable unit / component-mount test harness for DuetWebControl (Vue 3) plugins. Mocks the DWC plugin API surface (@/stores/*, @/plugins, @/i18n, @/utils/events) so plugin components can be mounted, fed a fake object model, and asserted on — plus CLI helpers to type-check and verify-build a plugin against a DWC checkout.",
   "license": "MIT",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/test-utils": "^2.4.6",
-    "happy-dom": "^15.11.7",
+    "happy-dom": "^20.11.15",
     "vitest": "^4.1.8",
     "vue": "^3.5.30",
     "vuetify": "^4.1.0"

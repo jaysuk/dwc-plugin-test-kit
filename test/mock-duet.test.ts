@@ -37,6 +37,14 @@ describe("mock Duet REST server", () => {
 		expect(introspect.sent).toEqual(["G28", "M18"]);
 	});
 
+	it("answers an OPTIONS preflight without recording it as a real request", async () => {
+		await fetch(`${duet.url}/__sent`, { method: "DELETE" });
+		const res = await fetch(`${duet.url}/rr_gcode?gcode=G28`, { method: "OPTIONS" });
+		expect(res.status).toBe(204);
+		expect(res.headers.get("access-control-allow-origin")).toBe("*");
+		expect(duet.sent).toEqual([]); // an OPTIONS preflight must never count as a G-code send
+	});
+
 	it("DELETE /__sent and reset() clear the record", async () => {
 		await get("/rr_gcode?gcode=G90");
 		await fetch(`${duet.url}/__sent`, { method: "DELETE" });

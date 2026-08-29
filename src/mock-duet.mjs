@@ -64,6 +64,20 @@ export function mockDuetHandler({ model = DEFAULT_MOCK_MODEL } = {}) {
 	};
 
 	const handler = (req, res) => {
+		// CORS preflight: a real browser (Playwright's real point, and — surfaced by a happy-dom
+		// major bump that started actually issuing one — happy-dom's fetch too) sends an OPTIONS
+		// request before certain cross-origin ones. Every route below assumed it would only ever see
+		// the real method, so a preflight for e.g. /rr_gcode was silently recorded as a second real
+		// G-code send. Answer it here, before any path routing, so nothing below ever sees OPTIONS.
+		if (req.method === "OPTIONS") {
+			res.writeHead(204, {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+				"Access-Control-Allow-Headers": "*",
+			});
+			return res.end();
+		}
+
 		const url = new URL(req.url, "http://localhost");
 		const p = url.pathname;
 		const q = url.searchParams;
