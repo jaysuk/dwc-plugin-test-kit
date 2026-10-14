@@ -39,7 +39,7 @@ jobs:
           ref: ${{ inputs.kit-ref }}
           path: dwc-plugin-test-kit
       - uses: actions/setup-node@v5
-        with: { node-version: 20, cache: npm, cache-dependency-path: plugin/package-lock.json }
+        with: { node-version: 26, cache: npm, cache-dependency-path: plugin/package-lock.json }
       - name: Install plugin
         working-directory: plugin
         run: npm install
@@ -69,7 +69,7 @@ jobs:
           ref: ${{ inputs.dwc-ref }}
           path: DuetWebControl
       - uses: actions/setup-node@v5
-        with: { node-version: 20 }
+        with: { node-version: 26 }
       - name: Install DuetWebControl
         working-directory: DuetWebControl
         run: npm install
