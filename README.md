@@ -148,20 +148,29 @@ not bundle a second Vuetify copy) or the manifest's `dwcFiles` is empty.
 
 ## CI
 
-Add `.github/workflows/ci.yml` to your plugin:
+The shared CI now lives in [jaysuk/dwc-plugin-workflows](https://github.com/jaysuk/dwc-plugin-workflows),
+next to the shared release workflow. Add `.github/workflows/ci.yml` to your plugin:
 
 ```yaml
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 jobs:
   test:
-    uses: jaysuk/dwc-plugin-test-kit/.github/workflows/dwc-plugin-ci.yml@main
-    # with: { dwc-ref: next }   # optional overrides
+    uses: jaysuk/dwc-plugin-workflows/.github/workflows/ci.yml@v1
+    with:
+      dwc-ref: v3.7-dev   # optional; this is the default
 ```
 
 It runs the unit/mount tests, then (in a second job) checks out DWC and runs `verify-build` +
 `typecheck`. If your plugin defines a `test:coverage` script (see below) the unit job runs it instead
-of `npm test`, so coverage is collected in CI automatically.
+of `npm test`, so coverage is collected in CI automatically. This package is just a dependency of your
+plugin: its version is the one in your `package.json`, with nothing to pin in the workflow.
+
+(`.github/workflows/dwc-plugin-ci.yml` in this repo is the previous home of that workflow. It still works
+for plugins pinned to it, but is deprecated and no longer maintained.)
 
 ## Coverage — see what's left to test
 
