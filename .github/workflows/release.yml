@@ -32,7 +32,7 @@ jobs:
           fetch-tags: true
 
       - uses: actions/setup-node@v6
-        with: { node-version: 24 }
+        with: { node-version: 26 }
 
       # Fetch the shared changelog generator from the runtime repo (single source of truth, pinned ref).
       - name: Fetch shared release-notes generator
