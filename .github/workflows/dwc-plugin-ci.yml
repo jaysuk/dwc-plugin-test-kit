@@ -1,3 +1,7 @@
+# DEPRECATED - the shared CI moved to jaysuk/dwc-plugin-workflows (.github/workflows/ci.yml@v1), which
+# needs no kit version pinned in the plugin. This copy is kept only so plugins still pinned to an old kit
+# tag keep working; it is no longer maintained.
+#
 # Reusable CI workflow for DuetWebControl (Vue 3) plugins.
 #
 # In a plugin repo, add .github/workflows/ci.yml:
